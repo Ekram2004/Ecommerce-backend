@@ -5,11 +5,11 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  },
+  // slug: {
+  //   type: String,
+  //   required: true,
+  //   unique: true
+  // },
   description: String,
   price: {
     type: Number,
