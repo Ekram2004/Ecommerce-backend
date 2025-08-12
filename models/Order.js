@@ -1,44 +1,50 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const orderItemSchema = new mongoose.Schema({
-    product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-    },
-    quantity: Number,
-    unitPrice: Number
-});
-
-const orderSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema(
+  {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    items: [orderItemSchema],
-    subtotal: Number,
-    shipping: Number,
-    tax: Number,
-    total: Number,
-    currency: {
-        type: String,
-        default: 'USD'
-    },
-    status: {
-        type: String,
-        enum: ['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'],
-        default: 'pending'
-    },
-    paymentInfo: {
-        provider: String,
-        providerId: String
-    },
+    orderItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
     shippingAddress: {
-        street: String,
-        city: String,
-        state: String,
-        zip: String,
-        country: String
+      fullName: { type: String, required: true },
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
     },
-}, { timestamps: true });
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ["Cash on Delivery", "Credit Card", "PayPal"],
+    },
+    paymentResult: {
+      id: String,
+      status: String,
+      update_time: String,
+      email_address: String,
+    },
+    itemsPrice: { type: Number, required: true },
+    shippingPrice: { type: Number, required: true },
+    totalPrice: { type: Number, required: true },
+    isPaid: { type: Boolean, default: false },
+    paidAt: Date,
+    isDelivered: { type: Boolean, default: false },
+    deliveredAt: Date,
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = mongoose.model("Order", orderSchema);
